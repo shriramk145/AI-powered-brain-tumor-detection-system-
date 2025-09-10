@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroAI - Combined Analysis Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header .generated-date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #555;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .diagnosis-result {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .diagnosis-result.low-risk {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #2c5530;
+        }
+
+        .diagnosis-result.high-risk {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #721c24;
+        }
+
+        .diagnosis-result h3 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+            color: inherit;
+        }
+
+        .diagnosis-result p {
+            font-size: 1.1rem;
+            margin: 0;
+            color: inherit;
+        }
+
+        .parameters-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .parameters-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .parameters-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .parameters-table tr:nth-child(even) td {
+            background: white;
+        }
+
+        .parameters-table tr:hover td {
+            background: #e8f2ff;
+        }
+
+        .parameters-table td:first-child {
+            font-weight: 600;
+            color: #495057;
+            background: #f1f3f4;
+        }
+
+        .parameters-table tr:nth-child(even) td:first-child {
+            background: #e9ecef;
+        }
+
+        .parameters-table tr:hover td:first-child {
+            background: #d1ecf1;
+        }
+
+        .images-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-box {
+            text-align: center;
+            flex: 1 1 300px; /* Allow items to grow/shrink, max 3 per row on wide screens */
+        }
+
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-label {
+            display: block;
+            margin-top: 10px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        .disclaimer {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            font-weight: bold;
+            border-left: 4px solid #dc3545;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .parameters-table {
+                font-size: 0.9rem;
+            }
+
+            .parameters-table th,
+            .parameters-table td {
+                padding: 10px;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-header">
+                <span class="logo">🧠</span>
+                <h1>Combined Analysis Report</h1>
+            </div>
+            <div class="generated-date">Generated on: {{ data.now }}</div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>Patient Details</h2>
+                <div class="parameters-section">
+                    {% if data.patient_details %}
+                    <table class="parameters-table">
+                        <thead>
+                            <tr>
+                                <th>Patient Parameter</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Full Name</td>
+                                <td>{{ data.patient_details.Name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Age</td>
+                                <td>{{ data.patient_details.Age }}</td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td>{{ data.patient_details.Gender }}</td>
+                            </tr>
+                            <tr>
+                                <td>Mobile Number</td>
+                                <td>{{ data.patient_details.Mobile }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Final Diagnosis</h2>
+                {% if data.final_class == 'notumor' %}
+                    <div class="diagnosis-result low-risk">
+                        <h3>✅ Low Risk Assessment</h3>
+                        <p>Based on the combined analysis of symptoms and MRI data, the model suggests a low probability of a brain tumor.</p>
+                    </div>
+                {% else %}
+                    <div class="diagnosis-result high-risk">
+                        <h3>⚠️ Potential Tumor Detected</h3>
+                        <p>The combined analysis has identified a potential tumor of type: <strong>{{ data.final_class }}</strong>.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>Confidence Scores</h2>
+                <div style="text-align: center;">
+                    <p>The model's confidence for each classification is:</p>
+                    <table class="parameters-table">
+                        <thead>
+                            <tr>
+                                <th>Tumor Type</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name, score in data.probabilities.items() %}
+                                <tr>
+                                    <td>{{ name.capitalize() }}</td>
+                                    <td>{{ score }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Visual Analysis</h2>
+                <p style="text-align: center; margin-bottom: 20px;">The images below show the original MRI, a heatmap of the AI's focus area, and a segmented mask of the identified tumor.</p>
+                <div class="images-container">
+                    <div class="image-box">
+                        <img src="{{ data.original_image_url }}" alt="Original MRI Scan">
+                        <span class="image-label">Original MRI Scan</span>
+                    </div>
+                    <div class="image-box">
+                        <img src="{{ data.heatmap_url }}" alt="Grad-CAM Heatmap">
+                        <span class="image-label">AI Highlight: Important Regions</span>
+                    </div>
+                    <div class="image-box">
+                        <img src="{{ data.segmentation_url }}" alt="U-Net Segmentation Mask">
+                        <span class="image-label">U-Net Segmentation Mask</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Symptoms and Risk Factors</h2>
+                <div class="parameters-section">
+                    <table class="parameters-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in data.patient_data.items() %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="disclaimer">
+                <strong>⚠️ Medical Disclaimer:</strong><br>
+                This report is for informational purposes only and is not a substitute for professional medical advice.
+                Always consult with a qualified healthcare provider for a proper diagnosis and treatment plan.
+            </div>
+
+            <div class="actions">
+                <a href="javascript:window.print()" class="btn">🖨️ Print Report</a>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">📊 Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

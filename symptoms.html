@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Symptoms Analysis - NeuroAI</title>
+    <style>
+        /* All the CSS from your landing_page.html goes here */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: #333; overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* Navigation */
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            padding: 1rem 0; z-index: 1000; transition: all 0.3s ease;
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between;
+            align-items: center; padding: 0 2rem;
+        }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #667eea; }
+        .nav-link { text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s ease; }
+        .nav-link:hover { color: #667eea; }
+
+        /* Form Section */
+        .form-hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; padding-top: 80px;
+        }
+        .form-container { max-width: 800px; margin: 0 auto; padding: 2rem; position: relative; z-index: 2; }
+        .form-card {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
+            border-radius: 15px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: left;
+            width: 700px;
+            margin: 0 auto;
+        }
+        .form-card h1 { text-align: center; font-size: 2.5rem; color: #333; margin-bottom: 1rem; }
+        .form-card h2 {
+            font-size: 1.8rem; color: #444; margin-top: 2rem; margin-bottom: 1rem;
+            border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; color: #555; margin-bottom: 0.5rem; }
+        .form-group input, .form-group select {
+            width: 200%; max-width: 600px; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: #667eea; outline: none; }
+        .btn-submit {
+            width: 100%; padding: 1rem; border: none; border-radius: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; font-size: 1.2rem; font-weight: 600; cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; margin-top: 1rem;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+
+        .loading { text-align: center; margin-top: 1rem; font-size: 1.1rem; color: #667eea; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+        .hidden { display: none; }
+
+        .error-box {
+            margin-top: 1rem; padding: 0.75rem 1rem; border-left: 4px solid #dc3545;
+            background: #fdecea; color: #721c24; border-radius: 6px; display: none;
+        }
+
+        @media (max-width: 768px) { .form-card { padding: 2rem; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🧠 NeuroAI</div>
+            <a href="{{ url_for('dashboard') }}" class="nav-link" style="color: #667eea;">Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <section class="form-hero">
+        <div class="form-container">
+            <div class="form-card fade-in">
+                <h1>Symptoms Analysis</h1>
+
+                <form id="symptoms-form" novalidate>
+                    <h2>Patient Information</h2>
+
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter Name"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" name="age" min="1" max="120" required placeholder="e.g., 35"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender">
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number:</label>
+                        <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" maxlength="10" required placeholder="10-digit number"/>
+                    </div>
+
+                    <h2>Risk Factors</h2>
+                    <div class="form-group">
+                        <label for="familyHistory">Family History of Tumor?</label>
+                        <select id="familyHistory" name="familyHistory">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="headInjury">History of Head Injury?</label>
+                        <select id="headInjury" name="headInjury">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="radiationExposure">Radiation Exposure?</label>
+                        <select id="radiationExposure" name="radiationExposure">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <h2>Symptoms</h2>
+                    <div class="form-group">
+                        <label for="headache">Headache:</label>
+                        <select id="headache" name="headache" required>
+                            <option value="No" selected>No</option>
+                            <option value="Low">Low</option>
+                            <option value="Mild">Mild</option>
+                            <option value="Severe">Severe</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nausea">Nausea:</label>
+                        <select id="nausea" name="nausea" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mood">Mood Changes:</label>
+                        <select id="mood" name="mood" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cognitive">Cognitive Issues:</label>
+                        <select id="cognitive" name="cognitive" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="speech">Speech Difficulty:</label>
+                        <select id="speech" name="speech" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="seizures">Seizures:</label>
+                        <select id="seizures" name="seizures" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="vision">Vision Problems:</label>
+                        <select id="vision" name="vision" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hearing">Hearing Issues:</label>
+                        <select id="hearing" name="hearing" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="balance">Balance Problems:</label>
+                        <select id="balance" name="balance" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sensory">Sensory Changes:</label>
+                        <select id="sensory" name="sensory" required>
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Get Prediction</button>
+
+                    <div id="error-box" class="error-box"></div>
+                </form>
+
+                <div id="loading" class="loading hidden">
+                    <p>Processing your request...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const form = document.getElementById('symptoms-form');
+        const loadingEl = document.getElementById('loading');
+        const errorBox = document.getElementById('error-box');
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+
+        function clearError() {
+            errorBox.textContent = '';
+            errorBox.style.display = 'none';
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearError();
+
+            // Frontend validation
+            const name = document.getElementById('name').value.trim();
+            const age = Number(document.getElementById('age').value);
+            const mobile = document.getElementById('mobile').value.trim();
+
+            if (!name) {
+                showError('Please enter the full name.');
+                return;
+            }
+            if (!(age >= 1 && age <= 120)) {
+                showError('Please enter a valid age between 1 and 120.');
+                return;
+            }
+            if (!/^\d{10}$/.test(mobile)) {
+                showError('Mobile number must be exactly 10 digits.');
+                return;
+            }
+
+            const formData = new FormData(form);
+            loadingEl.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/predict_symptoms', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                loadingEl.classList.add('hidden');
+
+                if (response.ok) {
+                    window.location.href = result.redirect_url;
+                } else {
+                    showError(result.error || 'An unknown error occurred.');
+                }
+            } catch (err) {
+                loadingEl.classList.add('hidden');
+                showError('Network error or server unreachable.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NeuroAI</title>
+    <style>
+        /* All the CSS from your landing_page.html goes here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #667eea;
+        }
+        /* Dashboard Hero Section (Re-purposed) */
+        .dashboard-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .dashboard-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .dashboard-content h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        .dashboard-content p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .option-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .option-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        .option-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .option-card p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            margin-top: 2rem;
+        }
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+        }
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🧠 NeuroAI</div>
+        </div>
+    </nav>
+
+    <section class="dashboard-hero">
+        <div class="dashboard-container">
+            <div class="dashboard-content fade-in">
+                <h1>Analysis Dashboard</h1>
+                <p>Choose an analysis type to begin. You can perform a symptoms-based prediction, an MRI-based prediction, or a combination of both for the most accurate result.</p>
+                <div class="options-grid">
+                    <a href="{{ url_for('symptoms_page') }}" class="option-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="option-icon">📋</div>
+                        <h3>Symptoms Analysis</h3>
+                        <p>Predict tumor likelihood based on a patient's reported symptoms and medical history.</p>
+                    </a>
+                    <a href="{{ url_for('mri_upload_page') }}" class="option-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="option-icon">🖼️</div>
+                        <h3>MRI Analysis</h3>
+                        <p>Classify tumor type and location using a single brain MRI scan image.</p>
+                    </a>
+                    <a href="{{ url_for('combined_page') }}" class="option-card fade-in" style="animation-delay: 0.6s;">
+                        <div class="option-icon">🤝</div>
+                        <h3>Combined Analysis</h3>
+                        <p>Leverage both patient symptoms and MRI data for our most comprehensive and accurate prediction.</p>
+                    </a>
+                </div>
+                <a href="{{ url_for('landing_page') }}" class="btn btn-logout">Return to Landing Page</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
